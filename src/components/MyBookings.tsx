@@ -61,6 +61,13 @@ export function MyBookings({ language, user, onBack }: MyBookingsProps) {
 
   const t = translations[language];
 
+  const greeting =
+    language === "ko"
+      ? `안녕하세요, ${user?.name ? `${user.name}님` : "고객님"}`
+      : language === "vi"
+      ? `Xin chào, ${user?.name ?? "bạn"}`
+      : `Hello, ${user?.name ?? "there"}`;
+
   const loadBookings = useCallback(async () => {
     try {
       // 예시: /bookings?mine=1 또는 /bookings/mine 같은 엔드포인트를 BookingsAPI.listMine로 래핑
@@ -186,9 +193,7 @@ export function MyBookings({ language, user, onBack }: MyBookingsProps) {
                   <h1 className="text-lg font-semibold text-slate-900">
                     {t.bookings.title}
                   </h1>
-                  <p className="text-sm text-slate-500">
-                    안녕하세요, {user.name}님
-                  </p>
+                  <p className="text-sm text-slate-500">{greeting}</p>
                 </div>
               </div>
             </div>

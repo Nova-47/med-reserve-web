@@ -1,0 +1,42 @@
+{
+  "id": "/",
+  "name": "Med Reserve",
+  "short_name": "MedReserve",
+  "description": "Safe and reliable medical appointment service for international patients in Korea.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#0ea5e9",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Start Booking",
+      "short_name": "Booking",
+      "description": "Open chat to start a booking",
+      "url": "/app/chat"
+    },
+    {
+      "name": "My Bookings",
+      "short_name": "Bookings",
+      "url": "/app/bookings"
+    }
+  ],
+  "categories": ["health", "medical", "productivity"]
+}

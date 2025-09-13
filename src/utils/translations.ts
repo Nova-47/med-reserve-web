@@ -1,0 +1,521 @@
+import raw from "../i18n/translations.json";
+
+// 언어 리터럴 타입 고정
+export type Language = "ko" | "en" | "vi";
+
+// 각 언어 오브젝트 형태를 raw에서 가져와 재사용 (any 방지용)
+type OneLocale = typeof raw extends Record<Language, infer L> ? L : unknown;
+
+// 읽기 전용 Record 타입으로 고정
+export const translations: Readonly<Record<Language, OneLocale>> = raw;
+
+// 기존과 동일한 타입들 유지
+export type TranslationSchema = (typeof translations)[Language];
+export type TranslationKey = keyof (typeof translations)["ko"];
+
+/*
+🔒 legacy: moved to JSON (2025-09)
+export const translations = {
+  ko: {
+    title: "도우미 (의료예약시스템)",
+    subtitle: "외국인을 위한 의료 예약 서비스",
+    selectLanguage: "언어를 선택하세요",
+    botName: "도우미",
+    main: {
+      hero: {
+        title: "안전하고 신뢰할 수 있는",
+        titleHighlight: "의료 예약 서비스",
+        subtitle:
+          "외국인 환자를 위한 전문적인 의료 예약 시스템으로 언어 장벽 없이 편리하게 진료 예약을 하실 수 있습니다. 전국 어디서나 이용 가능합니다.",
+        startBooking: "도우미와 예약하기",
+        learnMore: "서비스 소개",
+        nationwide: "🇰🇷 전국 서비스",
+        translation: "📝 한국어 메모 작성",
+      },
+      features: {
+        title: "왜 저희 서비스를 선택해야 할까요?",
+        multilingual: {
+          title: "다국어 지원",
+          description: "한국어, 영어, 베트남어로 편안하게 소통하세요",
+        },
+        ai: {
+          title: "AI + 전문 인력",
+          description:
+            "AI 도우미가 정보를 수집하고 전문 상담사가 정확한 예약 처리를 해드립니다",
+        },
+        secure: {
+          title: "안전한 정보 보호",
+          description: "개인정보와 의료정보를 안전하게 보호합니다",
+        },
+        translation: {
+          title: "한국어 메모 작성",
+          description:
+            "대기중인 전문 인력이 증상을 바탕으로 의사에게 보여줄 정확한 한국어 메모를 작성해드립니다",
+        },
+        nationwide: {
+          title: "전국 서비스",
+          description: "전국 어디서나 병원 예약이 가능합니다",
+        },
+        quality: {
+          title: "엄선된 병원",
+          description:
+            "베트남어, 영어 사용자들의 후기가 좋은 믿을만한 병원만을 선별적으로 추천해드립니다",
+        },
+      },
+      process: {
+        title: "예약 과정",
+        subtitle: "간단한 4단계로 예약을 완료하세요",
+        step1: {
+          title: "정보 입력",
+          description: "기본 정보와 증상을 입력합니다",
+        },
+        step2: {
+          title: "병원 선택",
+          description: "원하는 지역과 진료과를 선택합니다",
+        },
+        step3: {
+          title: "일정 선택",
+          description: "편리한 날짜와 시간을 선택합니다",
+        },
+        step4: {
+          title: "예약 확정",
+          description: "정보 확인 후 예약이 완료됩니다",
+        },
+      },
+    },
+    chat: {
+      welcome:
+        "안녕하세요! 저는 도우미예요 🌸 의료 예약을 도와드리겠습니다. 언어는 걱정 마세요 - 대기중인 전문인력이 진료예약을 대신해드리고 나중에 의사 선생님께 보여드릴 한국어 메모도 작성해드려요!",
+      askName: "성함을 알려주세요.",
+      askPhone: "연락처를 입력해주세요.",
+      askSymptoms: "어떤 증상이 있으신지 자세히 설명해주세요.",
+      askDepartment:
+        "어떤 진료과를 원하시나요? 모르시면 '모름'으로 체크해주세요!",
+      askLocation: "어느 지역의 병원을 선호하시나요? (구체적으로 말씀해주세요)",
+      askDate: "언제 진료를 받고 싶으신가요? 캘린더에서 날짜를 선택해주세요.",
+      askTime: "선호하는 시간대를 알려주세요.",
+      askLanguage: "진료 시 사용할 언어를 선택해주세요.",
+      confirmation: "입력하신 정보를 확인해주세요:",
+      complete:
+        "예약 신청이 완료되었습니다! 🎉\n\n실제 전문 상담사가 곧 직접 연락드려 정확한 예약 처리를 해드리고, 고객님의 증상을 바탕으로 의사 선생님께 보여드릴 완벽한 한국어 메모도 함께 작성해 보내드릴게요!\n\n전국 어디서나 이용 가능하니 안심하세요. 감사합니다!",
+    },
+    departments: [
+      "모름",
+      "내과",
+      "외과",
+      "소아과",
+      "산부인과",
+      "정형외과",
+      "피부과",
+      "안과",
+      "이비인후과",
+      "정신건강의학과",
+      "성형외과",
+      "치과",
+      "기타",
+    ],
+    times: ["오전 (09:00-12:00)", "오후 (14:00-17:00)", "상관없음"],
+    languages: ["한국어", "영어", "베트남어"],
+    buttons: {
+      send: "전송",
+      confirm: "확인",
+      edit: "수정",
+      restart: "다시 시작",
+      login: "가입 없이 로그인",
+      register: "회원가입",
+      logout: "로그아웃",
+      myBookings: "예약 내역",
+      cancel: "취소하기",
+      modify: "수정 요청",
+    },
+    fields: {
+      name: "이름",
+      phone: "전화번호",
+      symptoms: "증상",
+      department: "진료과",
+      location: "지역",
+      date: "희망 날짜",
+      time: "희망 시간",
+      language: "사용 언어",
+      email: "이메일",
+      password: "비밀번호",
+      confirmPassword: "비밀번호 확인",
+    },
+    auth: {
+      magicLinkTitle: "매직 링크 로그인",
+      magicLinkDescription:
+        "이메일 주소를 입력하시면 관리 토큰을 생성해드립니다",
+      tokenInputTitle: "관리 토큰 입력",
+      tokenInputDescription: "받으신 관리 토큰을 입력해주세요",
+      generateToken: "토큰 생성하기",
+      tokenGenerated: "관리 토큰이 생성되었습니다!",
+      tokenNote: "실제 서비스에서는 이메일로 전송됩니다",
+      copyToken: "토큰 복사",
+      tokenCopied: "토큰이 복사되었습니다!",
+      enterToken: "토큰으로 로그인",
+      loginSuccess: "로그인 성공!",
+      loginError: "잘못된 토큰입니다.",
+      emailRequired: "이메일을 입력해주세요.",
+      tokenRequired: "관리 토큰을 입력해주세요.",
+      backToEmail: "이메일 입력으로 돌아가기",
+      yourToken: "귀하의 관리 토큰:",
+    },
+    bookings: {
+      title: "예약 내역",
+      noBookings: "예약 내역이 없습니다.",
+      status: {
+        pending: "처리중",
+        confirmed: "확정",
+        cancelled: "취소됨",
+        completed: "완료",
+      },
+      bookingId: "예약번호",
+      bookingDate: "예약일시",
+      requestDate: "신청일시",
+      cancelRequest: "취소 요청",
+      modifyRequest: "수정 요청",
+      cancelConfirm: "정말 이 예약을 취소하시겠습니까?",
+      modifyNote: "수정 요청 사항을 입력해주세요:",
+      requestSubmitted: "요청이 접수되었습니다. 담당자가 연락드리겠습니다.",
+      back: "뒤로가기",
+    },
+  },
+  en: {
+    title: "Mimi (Medical Appointment System)",
+    subtitle: "Medical appointment service for foreigners",
+    selectLanguage: "Select Language",
+    botName: "Mimi",
+    main: {
+      hero: {
+        title: "Safe and Reliable",
+        titleHighlight: "Medical Appointment Service",
+        subtitle:
+          "Professional medical appointment system for international patients. Book your appointments conveniently without language barriers. Available nationwide across Korea.",
+        startBooking: "Book with Mimi",
+        learnMore: "Learn More",
+        nationwide: "🇰🇷 Nationwide Service",
+        translation: "📝 Korean Memo Service",
+      },
+      features: {
+        title: "Why Choose Our Service?",
+        multilingual: {
+          title: "Multilingual Support",
+          description:
+            "Communicate comfortably in Korean, English, and Vietnamese",
+        },
+        ai: {
+          title: "AI + Professional Staff",
+          description:
+            "AI assistant collects information while professional consultants handle accurate booking processing",
+        },
+        secure: {
+          title: "Secure Information Protection",
+          description:
+            "Your personal and medical information is safely protected",
+        },
+        translation: {
+          title: "Korean Memo Service",
+          description:
+            "Our professional staff will create accurate Korean memo based on your symptoms to show to doctors",
+        },
+        nationwide: {
+          title: "Nationwide Service",
+          description: "Hospital booking available anywhere in Korea",
+        },
+        quality: {
+          title: "Carefully Selected Hospitals",
+          description:
+            "We selectively recommend only trusted hospitals with excellent reviews from Vietnamese and English-speaking patients",
+        },
+      },
+      process: {
+        title: "Booking Process",
+        subtitle: "Complete your booking in 4 simple steps",
+        step1: {
+          title: "Enter Information",
+          description: "Provide basic information and symptoms",
+        },
+        step2: {
+          title: "Choose Hospital",
+          description: "Select preferred location and department",
+        },
+        step3: {
+          title: "Select Schedule",
+          description: "Choose convenient date and time",
+        },
+        step4: {
+          title: "Confirm Booking",
+          description: "Review information and complete booking",
+        },
+      },
+    },
+    chat: {
+      welcome:
+        "Hello! I'm Mimi 🌸 I'll help you book a medical appointment. Don't worry about language barriers - our professional staff will handle your appointment booking and create a Korean memo for you to show to the doctor!",
+      askName: "Please tell me your name.",
+      askPhone: "Please enter your contact number.",
+      askSymptoms: "Please describe your symptoms in detail.",
+      askDepartment:
+        "Which medical department would you like to visit? If you're not sure, please select 'Not Sure'!",
+      askLocation:
+        "Which area would you prefer for the hospital? (Please be specific)",
+      askDate:
+        "When would you like to have your appointment? Please select a date from the calendar.",
+      askTime: "What time would you prefer?",
+      askLanguage: "Please select the language for your consultation.",
+      confirmation: "Please confirm your information:",
+      complete:
+        "Your appointment request has been completed! 🎉\n\nOur real professional consultants will contact you directly soon to handle accurate appointment processing and create a perfect Korean memo based on your symptoms to show to the doctor!\n\nService available nationwide across Korea. Thank you!",
+    },
+    departments: [
+      "Not Sure",
+      "Internal Medicine",
+      "Surgery",
+      "Pediatrics",
+      "Obstetrics & Gynecology",
+      "Orthopedics",
+      "Dermatology",
+      "Ophthalmology",
+      "ENT",
+      "Psychiatry",
+      "Plastic Surgery",
+      "Dentistry",
+      "Other",
+    ],
+    times: ["Morning (09:00-12:00)", "Afternoon (14:00-17:00)", "Any time"],
+    languages: ["Korean", "English", "Vietnamese"],
+    buttons: {
+      send: "Send",
+      confirm: "Confirm",
+      edit: "Edit",
+      restart: "Restart",
+      login: "Quick Login (No Sign-up)",
+      register: "Sign Up",
+      logout: "Logout",
+      myBookings: "My Bookings",
+      cancel: "Cancel",
+      modify: "Request Modification",
+    },
+    fields: {
+      name: "Name",
+      phone: "Phone",
+      symptoms: "Symptoms",
+      department: "Department",
+      location: "Location",
+      date: "Preferred Date",
+      time: "Preferred Time",
+      language: "Language",
+      email: "Email",
+      password: "Password",
+      confirmPassword: "Confirm Password",
+    },
+    auth: {
+      magicLinkTitle: "Magic Link Login",
+      magicLinkDescription:
+        "Enter your email address and we'll generate a management token",
+      tokenInputTitle: "Enter Management Token",
+      tokenInputDescription: "Please enter the management token you received",
+      generateToken: "Generate Token",
+      tokenGenerated: "Management token has been generated!",
+      tokenNote: "In actual service, this would be sent via email",
+      copyToken: "Copy Token",
+      tokenCopied: "Token copied to clipboard!",
+      enterToken: "Login with Token",
+      loginSuccess: "Login successful!",
+      loginError: "Invalid token.",
+      emailRequired: "Please enter your email.",
+      tokenRequired: "Please enter your management token.",
+      backToEmail: "Back to email input",
+      yourToken: "Your management token:",
+    },
+    bookings: {
+      title: "My Bookings",
+      noBookings: "No bookings found.",
+      status: {
+        pending: "Pending",
+        confirmed: "Confirmed",
+        cancelled: "Cancelled",
+        completed: "Completed",
+      },
+      bookingId: "Booking ID",
+      bookingDate: "Appointment Date",
+      requestDate: "Request Date",
+      cancelRequest: "Cancel Request",
+      modifyRequest: "Modify Request",
+      cancelConfirm: "Are you sure you want to cancel this booking?",
+      modifyNote: "Please enter modification details:",
+      requestSubmitted: "Request submitted. Our team will contact you soon.",
+      back: "Back",
+    },
+  },
+  vi: {
+    title: "Bông (Hệ thống Đặt lịch Khám bệnh)",
+    subtitle: "Dịch vụ đặt lịch khám bệnh cho người nước ngoài",
+    selectLanguage: "Chọn Ngôn ngữ",
+    botName: "Bông",
+    main: {
+      hero: {
+        title: "Dịch vụ Đặt lịch Y tế",
+        titleHighlight: "An toàn và Đáng tin cậy",
+        subtitle:
+          "Hệ thống đặt lịch khám bệnh chuyên nghiệp cho bệnh nhân quốc tế. Đặt lịch hẹn thuận tiện mà không có rào cản ngôn ngữ. Phục vụ toàn quốc Hàn Quốc.",
+        startBooking: "Đặt lịch với Bông",
+        learnMore: "Tìm hiểu thêm",
+        nationwide: "🇰🇷 Dịch vụ Toàn quốc",
+        translation: "📝 Viết ghi chú tiếng Hàn",
+      },
+      features: {
+        title: "Tại sao chọn dịch vụ của chúng tôi?",
+        multilingual: {
+          title: "Hỗ trợ Đa ngôn ngữ",
+          description: "Giao tiếp thoải mái bằng tiếng Hàn, Anh và Việt",
+        },
+        ai: {
+          title: "AI + Chuyên viên",
+          description:
+            "Trợ lý AI thu thập thông tin và các chuyên viên tư vấn xử lý đặt lịch chính xác",
+        },
+        secure: {
+          title: "Bảo mật Thông tin",
+          description: "Thông tin cá nhân và y tế được bảo vệ an toàn",
+        },
+        translation: {
+          title: "Dịch vụ Ghi chú tiếng Hàn",
+          description:
+            "Đội ngũ chuyên viên của chúng tôi sẽ viết ghi chú tiếng Hàn chính xác dựa trên triệu chứng để bạn trình bác sĩ",
+        },
+        nationwide: {
+          title: "Dịch vụ Toàn quốc",
+          description: "Đặt lịch bệnh viện ở bất kỳ đâu tại Hàn Quốc",
+        },
+        quality: {
+          title: "Bệnh viện Được Tuyển chọn",
+          description:
+            "Chúng tôi chỉ giới thiệu những bệnh viện đáng tin cậy có đánh giá tốt từ bệnh nhân nói tiếng Việt và tiếng Anh",
+        },
+      },
+      process: {
+        title: "Quy trình Đặt lịch",
+        subtitle: "Hoàn thành đặt lịch trong 4 bước đơn giản",
+        step1: {
+          title: "Nhập Thông tin",
+          description: "Cung cấp thông tin cơ bản và triệu chứng",
+        },
+        step2: {
+          title: "Chọn Bệnh viện",
+          description: "Chọn địa điểm và khoa ưa thích",
+        },
+        step3: {
+          title: "Chọn Lịch trình",
+          description: "Chọn ngày và giờ thuận tiện",
+        },
+        step4: {
+          title: "Xác nhận Đặt lịch",
+          description: "Xem lại thông tin và hoàn thành đặt lịch",
+        },
+      },
+    },
+    chat: {
+      welcome:
+        "Xin chào! Tôi là Bông 🌸 Tôi sẽ giúp bạn đặt lịch khám bệnh. Đừng lo lắng về rào cản ngôn ngữ - đội ngũ chuyên viên đang chờ sẵn để xử lý việc đặt lịch và tạo ghi chú tiếng Hàn cho bạn trình bác sĩ!",
+      askName: "Vui lòng cho tôi biết tên của bạn.",
+      askPhone: "Vui lòng nhập số điện thoại liên lạc.",
+      askSymptoms: "Vui lòng mô tả chi tiết các triệu chứng của bạn.",
+      askDepartment:
+        "Bạn muốn khám ở khoa nào? Nếu không biết, vui lòng chọn 'Không biết'!",
+      askLocation:
+        "Bạn muốn đến bệnh viện ở khu vực nào? (Vui lòng nói cụ thể)",
+      askDate: "Bạn muốn khám vào ngày nào? Vui lòng chọn ngày từ lịch.",
+      askTime: "Bạn muốn khám vào khung giờ nào?",
+      askLanguage: "Vui lòng chọn ngôn ngữ sử dụng khi khám.",
+      confirmation: "Vui lòng xác nhận thông tin của bạn:",
+      complete:
+        "Yêu cầu đặt lịch khám đã hoàn thành! 🎉\n\nCác chuyên viên tư vấn thật của chúng tôi sẽ liên lạc trực tiếp với bạn sớm để xử lý đặt lịch chính xác và tạo ghi chú tiếng Hàn hoàn hảo dựa trên triệu chứng để trình bác sĩ!\n\nDịch vụ có sẵn trên toàn quốc Hàn Quốc. Cảm ơn bạn!",
+    },
+    departments: [
+      "Không biết",
+      "Nội khoa",
+      "Ngoại khoa",
+      "Nhi khoa",
+      "Sản phụ khoa",
+      "Chỉnh hình",
+      "Da liễu",
+      "Mắt",
+      "Tai mũi họng",
+      "Tâm thần",
+      "Thẩm mỹ",
+      "Nha khoa",
+      "Khác",
+    ],
+    times: ["Sáng (09:00-12:00)", "Chiều (14:00-17:00)", "Bất kỳ lúc nào"],
+    languages: ["Tiếng Hàn", "Tiếng Anh", "Tiếng Việt"],
+    buttons: {
+      send: "Gửi",
+      confirm: "Xác nhận",
+      edit: "Chỉnh sửa",
+      restart: "Bắt đầu lại",
+      login: "Đăng nhập nhanh (NO đăng ký)",
+      register: "Đăng ký",
+      logout: "Đăng xuất",
+      myBookings: "Lịch hẹn của tôi",
+      cancel: "Hủy",
+      modify: "Yêu cầu sửa đổi",
+    },
+    fields: {
+      name: "Tên",
+      phone: "Số điện thoại",
+      symptoms: "Triệu chứng",
+      department: "Khoa",
+      location: "Khu vực",
+      date: "Ngày mong muốn",
+      time: "Giờ mong muốn",
+      language: "Ngôn ngữ",
+      email: "Email",
+      password: "Mật khẩu",
+      confirmPassword: "Xác nhận mật khẩu",
+    },
+    auth: {
+      magicLinkTitle: "Đăng nhập Magic Link",
+      magicLinkDescription:
+        "Nhập địa chỉ email và chúng tôi sẽ tạo token quản lý",
+      tokenInputTitle: "Nhập Token Quản lý",
+      tokenInputDescription: "Vui lòng nhập token quản lý bạn đã nhận",
+      generateToken: "Tạo Token",
+      tokenGenerated: "Token quản lý đã được tạo!",
+      tokenNote: "Trong dịch vụ thực tế, token sẽ được gửi qua email",
+      copyToken: "Sao chép Token",
+      tokenCopied: "Token đã được sao chép!",
+      enterToken: "Đăng nhập bằng Token",
+      loginSuccess: "Đăng nhập thành công!",
+      loginError: "Token không hợp lệ.",
+      emailRequired: "Vui lòng nhập email.",
+      tokenRequired: "Vui lòng nhập token quản lý.",
+      backToEmail: "Quay lại nhập email",
+      yourToken: "Token quản lý của bạn:",
+    },
+    bookings: {
+      title: "Lịch hẹn của tôi",
+      noBookings: "Không có lịch hẹn nào.",
+      status: {
+        pending: "Đang xử lý",
+        confirmed: "Đã xác nhận",
+        cancelled: "Đã hủy",
+        completed: "Hoàn thành",
+      },
+      bookingId: "Mã đặt lịch",
+      bookingDate: "Ngày hẹn",
+      requestDate: "Ngày yêu cầu",
+      cancelRequest: "Yêu cầu hủy",
+      modifyRequest: "Yêu cầu sửa đổi",
+      cancelConfirm: "Bạn có chắc muốn hủy lịch hẹn này?",
+      modifyNote: "Vui lòng nhập chi tiết sửa đổi:",
+      requestSubmitted:
+        "Yêu cầu đã được gửi. Nhóm của chúng tôi sẽ liên hệ sớm.",
+      back: "Quay lại",
+    },
+  },
+};
+
+export type Language = keyof typeof translations;
+export type TranslationKey = keyof typeof translations.ko;
+*/
